@@ -62,6 +62,4 @@ for i in range(len(packedfiles)):
         print("Packed and unpacked data matches (%s,%s)"%(packedfiles[i], unpackedfiles[i]))
     else:
          raise Exception("Packed and unpacked data doesn't match (%s,%s)"%(packedfiles[i], unpackedfiles[i]))
-    
-pdb.set_trace()
 
