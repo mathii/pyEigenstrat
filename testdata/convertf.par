@@ -1,0 +1,8 @@
+genotypename:    unpacked.geno
+snpname:         unpacked.snp
+indivname:       unpacked.ind
+outputformat:    PACKEDANCESTRYMAP
+genotypeoutname: packed.geno
+snpoutname:      packed.snp
+indivoutname:    packed.ind
+familynames:     NO
