@@ -1,3 +1,4 @@
 *.pyc
 #local test data
 testdata_ho
+build/*
