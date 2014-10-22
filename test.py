@@ -35,14 +35,15 @@ for what in ["unpacked", "packed"]:
     print("Iterated data matches test data ("+what+")")
 
     # Test that we can load specific individuals and snps
-    data=pyEigenstrat.load("testdata/"+what, pops=["POP1"], inds=["IND5"], snps=["SNP_1", "SNP_4", "SNP_7", "SNP_8"])
-    subtest_gt=test_gt[np.array([0,3,6,7]),:][:,np.array([0,1,3,4])]
+    data=pyEigenstrat.load("testdata/"+what, pops=["POP1"], inds=["IND5"], exclude_inds=["IND2"], snps=["SNP_1", "SNP_4", "SNP_7", "SNP_8"])
+    subtest_gt=test_gt[np.array([0,3,6,7]),:][:,np.array([0,3,4])]
+
     load_gt=data.geno()
     # Test that loading all the data works
-    if (load_gt==subtest_gt).all():
-        print("Loaded sub-data matches test data ("+what+")")
+    if all([x==y for x,y in zip(load_gt.shape, subtest_gt.shape)]) and (load_gt==subtest_gt).all():
+        print("Loaded specific data matches test data ("+what+")")
     else:
-        raise Exception("Loaded data does not match test data ("+what+")")
+        raise Exception("Loaded specific data does not match test data ("+what+")")
 
     # Test that iterating works
     for i,d in enumerate(data):

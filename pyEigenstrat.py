@@ -69,7 +69,7 @@ dt_ind=np.dtype([("IND", np.str_, 32), ("POP", np.str_, 32)])
 
 ###########################################################################
 
-def load(file_root, pops=None, inds=None, snps=None):
+def load(file_root, pops=None, inds=None, exclude_inds=None, snps=None):
     """
     Investigate the geno file, and return either a packed
     or unpacked eigenstrat object as appropriate
@@ -78,9 +78,9 @@ def load(file_root, pops=None, inds=None, snps=None):
     head=geno_file.read(4)
     geno_file.close()
     if head=="GENO":
-        return packed_data(file_root, pops, inds, snps)
+        return packed_data(file_root, pops, inds, exclude_inds, snps)
     else:
-        return unpacked_data(file_root, pops, inds, snps)
+        return unpacked_data(file_root, pops, inds, exclude_inds, snps)
 
 ###########################################################################
 
@@ -89,14 +89,14 @@ class data():
     Base class.   
     """
 
-    def __init__(self, file_root, pops=None, inds=None, snps=None):
+    def __init__(self, file_root, pops=None, inds=None, exclude_inds=None, snps=None):
         """
         We expect to see files file_root.{snp,ind,geno}. the .geno
         file might be either packed or unpacked.  
         """
 
         snp,snp_include=load_snp_file(file_root, snps)
-        ind,ind_include=load_ind_file(file_root, pops, inds)
+        ind,ind_include=load_ind_file(file_root, pops, inds, exclude_inds)
 
         # Snp and ind data
         self.snp=snp
@@ -270,7 +270,7 @@ def load_snp_file(file_root, snps=None):
 
 ###########################################################################
 
-def load_ind_file(file_root, pops=None, inds=None):
+def load_ind_file(file_root, pops=None, inds=None, exclude_inds=None):
     """
     Load a .ind file, restricting to the union of specified
     individuals and individuals in the specified populations. 
@@ -278,15 +278,16 @@ def load_ind_file(file_root, pops=None, inds=None):
     ind=np.genfromtxt(file_root+".ind", dtype=dt_ind, usecols=(0,2))   # ignore sex
 
     include=np.ones(len(ind), dtype=bool)
-    if pops or inds:
+    if pops or inds or exclude_inds:
         include=np.zeros(len(ind), dtype=bool)
         if pops:
             include=np.in1d(ind["POP"], pops)
         if inds:
             include=np.logical_or(include, np.in1d(ind["IND"], inds))
-
+        if exclude_inds:
+            include=np.logical_and(include, ~np.in1d(ind["IND"], exclude_inds))
+            
     ind=ind[include]
-        
     return ind,include
 
 ###########################################################################
