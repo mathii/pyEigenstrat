@@ -1,4 +1,9 @@
 *.pyc
+build/*
+
 #local test data
 testdata_ho
-build/*
+
+#Eclipse files
+.project
+.pydevproject
