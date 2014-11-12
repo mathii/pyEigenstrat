@@ -57,7 +57,6 @@
 
 from __future__ import division
 import numpy as np 
-import pdb
 
 ################################################################################
 
@@ -256,12 +255,12 @@ def load_snp_file(file_root, snps=None):
     elif len(bits)==6:
         snpdt=dt_snp2
         snpcol=(0,1,3,4,5)
-            
+
     snp_file.seek(0)
     snp=np.genfromtxt(snp_file, dtype=snpdt, usecols=snpcol)
     snp_file.close()
 
-    include=np.ones(len(snp), dtype=bool)
+    include=np.ones(len(np.atleast_1d(snp)), dtype=bool)
     if snps is not None:
         include=np.in1d(snp["ID"], snps)
         snp=snp[include]
