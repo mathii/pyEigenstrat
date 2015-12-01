@@ -233,7 +233,7 @@ class packed_data(data):
 
         gt_bits=np.unpackbits(np.fromstring(record, dtype='uint8'))
         gt=2*gt_bits[::2]+gt_bits[1::2]
-        gt=gt[self._ind_include]
+        gt=gt[:self._nind][self._ind_include]
         gt[gt==3]=9                       #set missing values
         
         return gt
